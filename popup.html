@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'">
+  <title>디피갤 보플 다운로더</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🎹 디피갤 보플 다운로더</h1>
+    
+    <div class="status-section">
+      <p id="status">현재 페이지를 확인 중...</p>
+      <p id="found-count" class="hidden">발견된 보플: <span id="count">0</span>개</p>
+    </div>
+    
+    <div class="button-section">
+      <button id="scan-btn" class="btn btn-primary">보플 스캔</button>
+      <button id="download-btn" class="btn btn-success hidden" disabled>전체 다운로드</button>
+    </div>
+    
+    <div id="progress-section" class="progress-section hidden">
+      <div class="progress-bar">
+        <div id="progress-fill" class="progress-fill"></div>
+      </div>
+      <p id="progress-text">0 / 0</p>
+    </div>
+    
+    <div id="log-section" class="log-section hidden">
+      <h3>다운로드 로그</h3>
+      <div id="log-container"></div>
+    </div>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>

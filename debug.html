@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>DC 보이스리플 디버거</title>
+  <style>
+    body {
+      font-family: monospace;
+      padding: 20px;
+      background: #1e1e1e;
+      color: #d4d4d4;
+    }
+    h1 {
+      color: #4ec9b0;
+    }
+    .section {
+      margin: 20px 0;
+      padding: 15px;
+      background: #252526;
+      border-radius: 5px;
+      border-left: 3px solid #007acc;
+    }
+    button {
+      padding: 10px 20px;
+      background: #0e639c;
+      color: white;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    button:hover {
+      background: #1177bb;
+    }
+    pre {
+      background: #1e1e1e;
+      padding: 10px;
+      border-radius: 3px;
+      overflow-x: auto;
+      border: 1px solid #3c3c3c;
+    }
+    .warning {
+      color: #dcdcaa;
+      background: #3c3c00;
+      padding: 10px;
+      border-radius: 3px;
+      margin: 10px 0;
+    }
+    .error {
+      color: #f48771;
+      background: #3c0000;
+      padding: 10px;
+      border-radius: 3px;
+      margin: 10px 0;
+    }
+    .success {
+      color: #4ec9b0;
+      background: #003c2e;
+      padding: 10px;
+      border-radius: 3px;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔍 DC 보이스리플 디버거</h1>
+  
+  <div class="warning">
+    ⚠️ 이 페이지를 디씨인사이드 보이스리플이 있는 페이지에서 열고 아래 코드를 콘솔에서 실행하세요.
+  </div>
+  
+  <div class="section">
+    <h2>1단계: 페이지 구조 분석</h2>
+    <p>디씨인사이드 페이지의 F12 콘솔에서 다음 코드를 실행하세요:</p>
+    <pre>
+// 모든 audio 태그 찾기
+console.log('=== Audio Elements ===');
+const audios = document.querySelectorAll('audio');
+console.log(`Found ${audios.length} audio elements`);
+audios.forEach((a, i) => {
+  console.log(`Audio ${i}:`, a);
+  console.log('  - src:', a.src);
+  console.log('  - class:', a.className);
+  console.log('  - parent:', a.parentElement);
+});
+
+// voice 관련 클래스나 ID를 가진 요소 찾기
+console.log('=== Voice Related Elements ===');
+const voiceElements = document.querySelectorAll('[class*="voice"], [id*="voice"]');
+console.log(`Found ${voiceElements.length} voice elements`);
+voiceElements.forEach((el, i) => {
+  console.log(`Element ${i}:`, el);
+  console.log('  - class:', el.className);
+  console.log('  - id:', el.id);
+  console.log('  - onclick:', el.getAttribute('onclick'));
+  console.log('  - data attrs:', [...el.attributes].filter(a => a.name.startsWith('data-')));
+});
+
+// onclick에 voice/audio가 포함된 요소 찾기
+console.log('=== Clickable Elements ===');
+const clickables = document.querySelectorAll('[onclick*="voice"], [onclick*="audio"], [onclick*=".mp3"]');
+console.log(`Found ${clickables.length} clickable elements`);
+clickables.forEach((el, i) => {
+  console.log(`Clickable ${i}:`, el);
+  console.log('  - onclick:', el.getAttribute('onclick'));
+});
+
+// 댓글 영역 구조 확인
+console.log('=== Comment Structure ===');
+const comments = document.querySelectorAll('.cmt_info, .ub-content, [class*="comment"], [class*="reply"]');
+console.log(`Found ${comments.length} comment areas`);
+comments.slice(0, 3).forEach((cmt, i) => {
+  console.log(`Comment ${i}:`, cmt);
+  console.log('  - HTML:', cmt.innerHTML.substring(0, 200));
+});
+    </pre>
+  </div>
+  
+  <div class="section">
+    <h2>2단계: 보이스리플 URL 패턴 확인</h2>
+    <p>실제 보이스리플의 URL 패턴을 확인하세요. 예시:</p>
+    <ul>
+      <li>https://dcimg5.dcinside.com/voice/...</li>
+      <li>https://image.dcinside.com/voice/...</li>
+      <li>/voice/... (상대 경로)</li>
+    </ul>
+  </div>
+  
+  <div class="section">
+    <h2>3단계: Network 탭 확인</h2>
+    <p>F12 > Network 탭에서:</p>
+    <ol>
+      <li>필터를 "Media" 또는 "XHR"로 설정</li>
+      <li>보이스리플 재생 버튼 클릭</li>
+      <li>요청된 URL 확인</li>
+      <li>요청 헤더와 파라미터 확인</li>
+    </ol>
+  </div>
+  
+  <div class="section">
+    <h2>4단계: 결과 공유</h2>
+    <p>위 디버깅 결과를 공유해주시면 정확한 선택자로 수정해드리겠습니다:</p>
+    <ul>
+      <li>Audio 요소의 구조</li>
+      <li>보이스리플 버튼의 클래스명/ID</li>
+      <li>실제 보이스리플 URL 패턴</li>
+      <li>onclick 또는 data 속성 내용</li>
+    </ul>
+  </div>
+  
+  <div class="section">
+    <h2>빠른 테스트 스크립트</h2>
+    <button onclick="copyScript()">스크립트 복사</button>
+    <pre id="testScript">
+// 이 전체 코드를 디씨인사이드 콘솔에 붙여넣기
+(function() {
+  console.clear();
+  console.log('%c🔍 DC Voice Reply Scanner', 'font-size: 20px; color: #4ec9b0;');
+  
+  const results = {
+    audios: [],
+    voiceElements: [],
+    clickables: [],
+    urls: []
+  };
+  
+  // 1. Audio 태그
+  document.querySelectorAll('audio').forEach(a => {
+    results.audios.push({
+      src: a.src,
+      class: a.className,
+      html: a.outerHTML.substring(0, 100)
+    });
+  });
+  
+  // 2. Voice 관련 요소
+  document.querySelectorAll('[class*="voice"], [id*="voice"]').forEach(el => {
+    results.voiceElements.push({
+      tag: el.tagName,
+      class: el.className,
+      id: el.id,
+      onclick: el.getAttribute('onclick')?.substring(0, 100)
+    });
+  });
+  
+  // 3. 클릭 가능 요소
+  document.querySelectorAll('[onclick]').forEach(el => {
+    const onclick = el.getAttribute('onclick');
+    if (onclick.includes('voice') || onclick.includes('audio') || onclick.includes('.mp3')) {
+      results.clickables.push({
+        tag: el.tagName,
+        onclick: onclick.substring(0, 100)
+      });
+    }
+  });
+  
+  // 4. URL 패턴
+  document.body.innerHTML.match(/https?:\/\/[^\s'"]+\.(?:mp3|wav|ogg)/g)?.forEach(url => {
+    results.urls.push(url);
+  });
+  
+  console.log('📊 Results:', results);
+  console.log(`✅ Found ${results.audios.length} audio elements`);
+  console.log(`✅ Found ${results.voiceElements.length} voice elements`);
+  console.log(`✅ Found ${results.clickables.length} clickable elements`);
+  console.log(`✅ Found ${results.urls.length} URLs`);
+  
+  return results;
+})();
+    </pre>
+  </div>
+  
+  <script>
+    function copyScript() {
+      const script = document.getElementById('testScript').textContent;
+      navigator.clipboard.writeText(script);
+      alert('스크립트가 클립보드에 복사되었습니다!\n디씨인사이드 페이지의 콘솔에 붙여넣으세요.');
+    }
+  </script>
+</body>
+</html>
